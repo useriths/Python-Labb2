@@ -7,6 +7,7 @@ as well as functions for measurments and predictions of pokemons.
 import statistics
 from dataclasses import dataclass
 from math import sqrt
+import random
 
 
 @dataclass(slots=True, frozen=True)
@@ -153,3 +154,106 @@ def pokemon_dinstance(
         (pokemon.width - measurement.width) ** 2
         + (pokemon.height - measurement.height) ** 2
     )
+
+
+def print_accuracy_stats(
+    pikachus: list[Pokemon],
+    pichus: list[Pokemon],
+    iterations: int = 10,
+) -> None:
+    """Print accuracy a number of times based on \
+    predictions on randomized training and test data."""
+    # VG-assignment
+    accuracies = []
+    for iteration in range(iterations):
+        print(f"Iteration: {iteration + 1}")
+        training_data, test_data = prepare_randomized_training_and_test_data(
+            pikachus, pichus
+        )
+
+        # Predict pokemons
+        predictions = predict_pokemon_types(
+            training_data,
+            test_data,
+        )
+
+        # Filter out the types only
+        actual_types = [pk.pokemon_type for pk in test_data]
+
+        print("Förutsägelse   ", predictions)
+        print("Faktiska typer ", actual_types)
+
+        # Count the cases where prediction and actual value are the same
+        right_answers = sum(
+            1
+            for prediction, actual in zip(predictions, actual_types)
+            if prediction == actual
+        )
+
+        # Note: Only check accuracy against the test data
+        number_of_pokemons = len(test_data)
+
+        print(f"Rätta svar: {right_answers}")
+        print(f"Antal pokemon: {number_of_pokemons}")
+
+        accuracy = right_answers / number_of_pokemons
+        accuracies.append(accuracy)
+
+        print(f"Träffsäkerhet: {accuracy:.2%}")
+        print()
+
+    avg_accuracy = statistics.mean(accuracies)
+
+    print(
+        f"Genomsnittet för träffsäkerhet på {iterations} iterationer"
+        + f" med {number_of_pokemons} slumpmässigt"
+        + f" valda pokemons per iteration blev: {avg_accuracy:.2%}"
+    )
+
+
+def predict_pokemon_types(
+    pokemons: list[Pokemon],
+    measurements: list[Pokemon],
+    n_closest: int = 1,
+) -> list[int | None]:
+    """Predict type based on measurement data."""
+    # Should result in: Pikachu, Pikachu, Pikachu, Pichu
+
+    pokemon_types = []
+    for measurement in measurements:
+        prediction = predict_pokemon_type(pokemons, measurement, n_closest)
+        pokemon_types.append(prediction)
+    return pokemon_types
+
+
+def prepare_randomized_training_and_test_data(
+    pikachus: list[Pokemon],
+    pichus: list[Pokemon],
+    training_amount: int = 50,
+    test_amount: int = 25,
+) -> tuple[list[Pokemon], list[Pokemon]]:
+    """Prepare pokemon data for randomized predictions."""
+    # Randomize lists
+    random.shuffle(pikachus)
+    random.shuffle(pichus)
+
+    # Note: training_amount and test_amount are per
+    # pokemon type (50 + 25 for pikachu and same for pichu)
+
+    # Pick random samples
+    training_pikachus = pikachus[:training_amount]
+    test_pikachus = pikachus[training_amount : training_amount + test_amount]
+
+    training_pichus = pichus[:training_amount]
+    test_pichus = pichus[training_amount : training_amount + test_amount]
+
+    # Reshuffle the training data
+    training_data = training_pikachus + training_pichus
+    random.shuffle(training_data)
+
+    # Reshuffle the test data
+    test_data = test_pikachus + test_pichus
+    random.shuffle(test_data)
+
+    # 100 samples of training_data, 50 samples of test_data
+    return training_data, test_data

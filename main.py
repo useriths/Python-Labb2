@@ -2,6 +2,7 @@
 
 from labb2 import (
     get_pokemon_data,
+    print_accuracy_stats,
     print_predicted_type_from_user_input,
     print_test_data_predictions,
 )
@@ -35,6 +36,10 @@ def main() -> None:
 
     print("Uppgift 2")
     print_predicted_type_from_user_input(all_pokemons, 10)
+    print()
+
+    print("Uppgift 3 (VG)")
+    print_accuracy_stats(pikachus, pichus)
     print()
 
 
