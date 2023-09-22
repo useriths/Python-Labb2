@@ -1,6 +1,10 @@
 """Main file to run the program."""
 
-from labb2 import get_pokemon_data, print_test_data_predictions
+from labb2 import (
+    get_pokemon_data,
+    print_predicted_type_from_user_input,
+    print_test_data_predictions,
+)
 
 
 def main() -> None:
@@ -24,6 +28,10 @@ def main() -> None:
         + "Sample with (width, height): (22, 34) classified as Pikachu\n"
         + "Sample with (width, height): (20.5, 34) classified as Pichu\n"
     )
+
+    print("Uppgift 1")
+    print_predicted_type_from_user_input(all_pokemons, 1)
+    print()
 
 
 if __name__ == "__main__":

@@ -72,6 +72,52 @@ def print_test_data_predictions(all_pokemons: list[Pokemon]) -> None:
             )
 
 
+def print_predicted_type_from_user_input(
+    pokemons: list[Pokemon],
+    n_closest: int = 1,
+) -> None:
+    "Predict type of pokemon based on values input by the user."
+    measurement = get_pokemon_from_input()
+    prediction = predict_pokemon_type(pokemons, measurement, n_closest)
+    prediction_string = "Pikachu" if prediction else "Pichu"
+    closest_string = "den" if n_closest == 1 else f"dom {n_closest}"
+    print(
+        f"(bredd, längd): ({measurement.width}, "
+        + f"{measurement.height}) klassificeras som "
+        + f"{prediction_string} (baserat på jämförelse med {closest_string} närmaste.)"
+    )
+
+
+def get_pokemon_from_input() -> Pokemon:
+    """Read input from keyboard until user has typed every value correct."""
+
+    width = read_failsafe_input("bredd")
+    height = read_failsafe_input("längd")
+
+    return Pokemon(width, height)
+
+
+def read_failsafe_input(measurement_string: str) -> float:
+    """Read input from keyboard until user inputs a valid value."""
+
+    while True:
+        value_input = input(
+            f"Ange {measurement_string} i form av ett heltal eller decimaltal: "
+        ).strip()
+
+        try:
+            value = float(value_input)
+        except ValueError:
+            print(f"{value_input} är inte kompatibelt med float. Försök igen.")
+
+        if value < 0:
+            print("Värdet måste vara större än eller lika med 0")
+            continue
+        break
+
+    return value
+
+
 def predict_pokemon_type(
     pokemon_list: list[Pokemon],
     measurement: Pokemon,
