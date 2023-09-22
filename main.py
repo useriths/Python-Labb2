@@ -33,6 +33,10 @@ def main() -> None:
     print_predicted_type_from_user_input(all_pokemons, 1)
     print()
 
+    print("Uppgift 2")
+    print_predicted_type_from_user_input(all_pokemons, 10)
+    print()
+
 
 if __name__ == "__main__":
     main()
