@@ -6,6 +6,7 @@ from labb2 import (
     print_predicted_type_from_user_input,
     print_test_data_predictions,
 )
+from plotting import plot_all_pokemons
 
 
 def main() -> None:
@@ -41,6 +42,9 @@ def main() -> None:
     print("Uppgift 3 (VG)")
     print_accuracy_stats(pikachus, pichus)
     print()
+
+    # Plot Pokemons
+    plot_all_pokemons(pikachus, pichus)
 
 
 if __name__ == "__main__":
